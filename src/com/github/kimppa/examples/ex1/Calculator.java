@@ -1,4 +1,4 @@
-package com.github.kimppa.examples;
+package com.github.kimppa.examples.ex1;
 
 public class Calculator {
 

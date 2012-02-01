@@ -1,8 +1,10 @@
-package com.github.kimppa.examples;
+package com.github.kimppa.examples.ex1;
 
 import junit.framework.Assert;
 
 import org.junit.Test;
+
+import com.github.kimppa.examples.ex1.Calculator;
 
 public class CalculatorTests {
 	

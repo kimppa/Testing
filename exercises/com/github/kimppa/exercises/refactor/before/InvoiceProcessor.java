@@ -1,4 +1,4 @@
-package com.github.kimppa.exercises.refactor.after;
+package com.github.kimppa.exercises.refactor.before;
 
 import java.util.ArrayList;
 import java.util.HashMap;

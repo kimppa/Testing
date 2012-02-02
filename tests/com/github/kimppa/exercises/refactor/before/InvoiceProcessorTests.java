@@ -16,7 +16,6 @@ import com.github.kimppa.exercises.refactor.Invoice;
 import com.github.kimppa.exercises.refactor.Order;
 import com.github.kimppa.exercises.refactor.OrderResponse;
 import com.github.kimppa.exercises.refactor.OrdersWebService;
-import com.github.kimppa.exercises.refactor.after.InvoiceProcessor;
 
 public class InvoiceProcessorTests {
 	

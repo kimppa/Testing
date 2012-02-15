@@ -2,12 +2,19 @@ package com.github.kimppa.exercises.tdd.shopping;
 
 import java.math.BigDecimal;
 
+/**
+ * Representation of a product.
+ * 
+ */
 public class Product {
-	
+
 	private String name;
-	
+
+	/**
+	 * Id needs to be a unique identifier for each product.
+	 */
 	private int id;
-	
+
 	private BigDecimal unitPrice;
 
 	public String getName() {

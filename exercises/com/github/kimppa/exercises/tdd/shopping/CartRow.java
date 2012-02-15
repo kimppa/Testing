@@ -4,10 +4,15 @@ import java.math.BigDecimal;
 
 import com.github.kimppa.exercises.tdd.shopping.util.CartRowCalculator;
 
+/**
+ * Represents one row in the shopping cart. Contains the product and the
+ * quantity that is wished to be purchased.
+ * 
+ */
 public class CartRow {
-	
+
 	private Product product;
-	
+
 	private int quantity;
 
 	public Product getProduct() {
@@ -25,10 +30,9 @@ public class CartRow {
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
-	
+
 	public BigDecimal getRowTotal() {
 		return new CartRowCalculator().getRowTotal(getProduct(), getQuantity());
 	}
-	
 
 }

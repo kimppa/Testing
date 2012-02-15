@@ -1,19 +1,35 @@
 package com.github.kimppa.exercises.tdd.shopping;
 
+import java.math.BigDecimal;
 import java.util.Iterator;
 
 import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+
+import com.github.kimppa.exercises.tdd.shopping.util.CartCalculator;
+import com.github.kimppa.exercises.tdd.shopping.util.ShippingCostCalculator;
 
 public class CartTests {
 
+	@Mock
+	private ShippingCostCalculator shippingCostCalculator;
+	
+	@Mock
+	private CartCalculator cartCalculator;
+	
+	@InjectMocks
 	private Cart cart;
 
 	@Before
 	public void setUp() {
 		cart = new Cart();
+		MockitoAnnotations.initMocks(this);
 	}
 
 	@Test
@@ -116,6 +132,31 @@ public class CartTests {
 		cart.removeProduct(product1);
 		Assert.assertEquals(1, cart.getRows().size());
 		Assert.assertEquals(product2, cart.getRows().iterator().next().getProduct());
+	}
+	
+	@Test
+	public void getRowsTotal_calculatorIsCalled() {
+		Mockito.when(cartCalculator.getRowsTotal(Mockito.anyCollectionOf(CartRow.class))).thenReturn(new BigDecimal("100"));
+		BigDecimal result = cart.getRowsTotal();
+		Assert.assertEquals(0, new BigDecimal("100").compareTo(result));
+		Mockito.verify(cartCalculator).getRowsTotal(Mockito.anyCollectionOf(CartRow.class));
+	}
+	
+	@Test
+	public void getShippingCosts_shippingCostCalculatorIsCalled() {
+		Mockito.when(cartCalculator.getRowsTotal(Mockito.anyCollectionOf(CartRow.class))).thenReturn(new BigDecimal("100"));
+		Mockito.when(shippingCostCalculator.getShippingCosts(Mockito.any(BigDecimal.class))).thenReturn(new BigDecimal("20"));
+		BigDecimal result = cart.getShippingCosts();
+		Assert.assertEquals(0, new BigDecimal("20").compareTo(result));
+		Mockito.verify(shippingCostCalculator).getShippingCosts(Mockito.any(BigDecimal.class));
+	}
+	
+	@Test
+	public void getTotal_shippingCosts20RowTotal300_returns320() {
+		Mockito.when(cartCalculator.getRowsTotal(Mockito.anyCollectionOf(CartRow.class))).thenReturn(new BigDecimal("300"));
+		Mockito.when(shippingCostCalculator.getShippingCosts(Mockito.any(BigDecimal.class))).thenReturn(new BigDecimal("20"));
+		BigDecimal result = cart.getTotal();
+		Assert.assertEquals(0, new BigDecimal("320").compareTo(result));
 	}
 
 }

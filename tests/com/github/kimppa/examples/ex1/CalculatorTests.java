@@ -14,7 +14,7 @@ public class CalculatorTests {
 	}
 	
 	@Test
-	public void absDiv_xIsZerp_returnsZero() {
+	public void absDiv_xIsZero_returnsZero() {
 		float result = new Calculator().absDiv(0, 3);
 		Assert.assertEquals(0f, result);
 	}

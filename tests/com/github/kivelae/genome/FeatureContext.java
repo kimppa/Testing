@@ -8,9 +8,11 @@ import java.util.Map;
 public class FeatureContext {
 
 	static Map<Class, List<Object>> data;
+	static Map<String, Object> objects;
 	
 	public static void initialize() {
 		data = new HashMap<Class, List<Object>>();
+		objects = new HashMap<String, Object>();
 	}
 	
 	public static <T> void add(T value) {
@@ -18,6 +20,14 @@ public class FeatureContext {
 			data.put(value.getClass(), new ArrayList<Object>());
 		}
 		data.get(value.getClass()).add(value);
+	}
+	
+	public static <T> void add(String key, T value) {
+		objects.put(key, value);
+	}
+	
+	public static <T> T get(String key) {
+		return (T) objects.get(key);
 	}
 	
 	public static <T> List<T> get(Class clazz) {

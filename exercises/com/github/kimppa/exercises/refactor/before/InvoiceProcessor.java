@@ -14,11 +14,20 @@ public class InvoiceProcessor {
 
 	private OrdersWebService ordersWebService;
 
+	private static final Integer USER_1 = 1;
+	private static final Integer USER_2 = 2;
+	private List<Integer> getUsers() {
+		List<Integer> users = new ArrayList<Integer>();
+		users.add(USER_1);
+		users.add(USER_2);
+		return users;
+	}
+	
 	public List<Invoice> createInvoicesForUser(int userId) {
 		OrderResponse response;
 		// Get data from ws
 		try {
-			response = ordersWebService.getUnbilledOrders(userId);
+			response = ordersWebService.getUnbilledOrders(getUsers());
 
 			// Handle response codes
 			handleResponse(response);

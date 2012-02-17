@@ -4,6 +4,7 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.jbehave.core.annotations.Given;
@@ -47,21 +48,33 @@ public class GenomeSequencerFeature extends StoryBase {
 			Integer count = row.valueAs("occurrences", Integer.class);
 			virusMatchCounts.put(virus, count);
 		}
-		FeatureContext.add(virusMatchCounts);
+		FeatureContext.add("virusMatchCount", virusMatchCounts);
 	}
 	
-	@When("I run score calculation")
-	public void WhenIRunScoreCalculation() {
-		Map<Sequence, Integer> virusMatchCounts = FeatureContext.getFirst(Map.class);
+	@When("I run score calculation from context")
+	public void WhenIRunScoreCalculationFromContext() {
+		Map<Sequence, Integer> virusMatchCounts = FeatureContext.get("virusMatchCount");
+		runScoreCalculation(virusMatchCounts);
+	}
+	
+	private void runScoreCalculation(Map<Sequence, Integer> virusMatchCounts) {
 		ScoreCalculator scoreCalculator = new ScoreCalculator(virusMatchCounts);
 		FeatureContext.add(scoreCalculator);
+	}
+
+	@When("I run score calculation")
+	public void WhenIRunScoreCalculation() {
+		GenomeVirusMatcher genomeVirusMatcher = FeatureContext.getFirst(GenomeVirusMatcher.class);
+		Map<Sequence, Integer> virusMatchCounts = genomeVirusMatcher.getVirusMatches();
+		runScoreCalculation(virusMatchCounts);
 	}
 	
 	@When("I run sequencer")
 	public void whenIRunSequencer() {
 		GenomeVirusMatcher genomeVirusMatcher = new GenomeVirusMatcher(FeatureContext.getFirst(Genome.class));
+		Virus[] viruses = FeatureContext.get(Virus.class).toArray(new Virus[1]);
+		genomeVirusMatcher.addVirusCandidates(viruses );
 		FeatureContext.add(genomeVirusMatcher);
-		genomeVirusMatcher.addVirusCandidates(FeatureContext.get(Virus.class).toArray(new Virus[1]));
 	}
 	
 	@Then("scores per viruses are: $scoreTable")
@@ -87,7 +100,7 @@ public class GenomeSequencerFeature extends StoryBase {
 	@Then("found viruses are: $foundViruses")
 	public void thenFoundVirusesAre(ExamplesTable foundViruses) {
 		GenomeVirusMatcher genomeVirusMatcher = FeatureContext.getFirst(GenomeVirusMatcher.class);
-		Map<Virus, Integer> virusMatches = genomeVirusMatcher.getVirusMatches();
+		Map<Sequence, Integer> virusMatches = genomeVirusMatcher.getVirusMatches();
 		for (Parameters row : foundViruses.getRowsAsParameters()) {
 			String virusSequence = row.valueAs("virus", String.class);
 			Virus virus = new Virus(virusSequence);

@@ -31,27 +31,36 @@ public class InvoiceProcessorTests {
 		MockitoAnnotations.initMocks(this);
 	}
 
+	private static final Integer USER_1 = 1;
+	private static final Integer USER_2 = 2;
+	private List<Integer> getUsers() {
+		List<Integer> users = new ArrayList<Integer>();
+		users.add(USER_1);
+		users.add(USER_2);
+		return users;
+	}
+	
 	@Test
 	public void createInvoicesForUser_webServiceThrowsException_nullReturned() {
-		Mockito.when(orderWebService.getUnbilledOrders(1)).thenThrow(
+		Mockito.when(orderWebService.getUnbilledOrders(getUsers())).thenThrow(
 				new RuntimeException("test"));
 
 		List<Invoice> invoices = invoiceProcessor.createInvoicesForUser(1);
 
 		Assert.assertNull(invoices);
 
-		Mockito.verify(orderWebService, Mockito.times(1)).getUnbilledOrders(1);
+		Mockito.verify(orderWebService, Mockito.times(1)).getUnbilledOrders(getUsers());
 	}
 
 	@Test
 	public void createInvoicesForUser_webServiceReturnsNull_nullReturned() {
-		Mockito.when(orderWebService.getUnbilledOrders(1)).thenReturn(null);
+		Mockito.when(orderWebService.getUnbilledOrders(getUsers())).thenReturn(null);
 
 		List<Invoice> invoices = invoiceProcessor.createInvoicesForUser(1);
 
 		Assert.assertNull(invoices);
 
-		Mockito.verify(orderWebService, Mockito.times(1)).getUnbilledOrders(1);
+		Mockito.verify(orderWebService, Mockito.times(1)).getUnbilledOrders(getUsers());
 	}
 
 	@Test
@@ -59,13 +68,13 @@ public class InvoiceProcessorTests {
 		OrderResponse response = new OrderResponse();
 		response.setResponseCode(0);
 
-		Mockito.when(orderWebService.getUnbilledOrders(1)).thenReturn(response);
+		Mockito.when(orderWebService.getUnbilledOrders(getUsers())).thenReturn(response);
 
 		List<Invoice> invoices = invoiceProcessor.createInvoicesForUser(1);
 
 		Assert.assertNull(invoices);
 
-		Mockito.verify(orderWebService, Mockito.times(1)).getUnbilledOrders(1);
+		Mockito.verify(orderWebService, Mockito.times(1)).getUnbilledOrders(getUsers());
 	}
 
 	@Test
@@ -74,14 +83,14 @@ public class InvoiceProcessorTests {
 		response.setResponseCode(1);
 		response.setOrders(null);
 
-		Mockito.when(orderWebService.getUnbilledOrders(1)).thenReturn(response);
+		Mockito.when(orderWebService.getUnbilledOrders(getUsers())).thenReturn(response);
 
 		List<Invoice> invoices = invoiceProcessor.createInvoicesForUser(1);
 
 		Assert.assertNotNull(invoices);
 		Assert.assertEquals(0, invoices.size());
 
-		Mockito.verify(orderWebService, Mockito.times(1)).getUnbilledOrders(1);
+		Mockito.verify(orderWebService, Mockito.times(1)).getUnbilledOrders(getUsers());
 	}
 
 	@Test
@@ -101,14 +110,14 @@ public class InvoiceProcessorTests {
 		response.setResponseCode(1);
 		response.setOrders(orders);
 
-		Mockito.when(orderWebService.getUnbilledOrders(1)).thenReturn(response);
+		Mockito.when(orderWebService.getUnbilledOrders(getUsers())).thenReturn(response);
 
 		List<Invoice> invoices = invoiceProcessor.createInvoicesForUser(1);
 
 		Assert.assertNotNull(invoices);
 		Assert.assertEquals(2, invoices.size());
 
-		Mockito.verify(orderWebService, Mockito.times(1)).getUnbilledOrders(1);
+		Mockito.verify(orderWebService, Mockito.times(1)).getUnbilledOrders(getUsers());
 	}
 
 	@Test
@@ -133,14 +142,14 @@ public class InvoiceProcessorTests {
 		response.setResponseCode(1);
 		response.setOrders(orders);
 
-		Mockito.when(orderWebService.getUnbilledOrders(1)).thenReturn(response);
+		Mockito.when(orderWebService.getUnbilledOrders(getUsers())).thenReturn(response);
 
 		List<Invoice> invoices = invoiceProcessor.createInvoicesForUser(1);
 
 		Assert.assertNotNull(invoices);
 		Assert.assertEquals(2, invoices.size());
 
-		Mockito.verify(orderWebService, Mockito.times(1)).getUnbilledOrders(1);
+		Mockito.verify(orderWebService, Mockito.times(1)).getUnbilledOrders(getUsers());
 	}
 
 	@Test
@@ -165,7 +174,7 @@ public class InvoiceProcessorTests {
 		response.setResponseCode(1);
 		response.setOrders(orders);
 
-		Mockito.when(orderWebService.getUnbilledOrders(1)).thenReturn(response);
+		Mockito.when(orderWebService.getUnbilledOrders(getUsers())).thenReturn(response);
 
 		List<Invoice> invoices = invoiceProcessor.createInvoicesForUser(1);
 
@@ -177,7 +186,7 @@ public class InvoiceProcessorTests {
 		Assert.assertEquals(2, invoice.getCustomerId());
 		Assert.assertEquals(new BigDecimal("25.75"), invoice.getAmount());
 
-		Mockito.verify(orderWebService, Mockito.times(1)).getUnbilledOrders(1);
+		Mockito.verify(orderWebService, Mockito.times(1)).getUnbilledOrders(getUsers());
 	}
 
 }

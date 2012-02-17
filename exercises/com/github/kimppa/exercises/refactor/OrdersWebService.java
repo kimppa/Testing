@@ -1,8 +1,16 @@
 package com.github.kimppa.exercises.refactor;
 
+<<<<<<< HEAD
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+=======
+import java.util.List;
+
+public interface OrdersWebService {
+	
+	public OrderResponse getUnbilledOrders(List<Integer> userIds);
+>>>>>>> d6f3c401b90ee7291d0cce20d68feb42974894ac
 
 public class OrdersWebService {
 		

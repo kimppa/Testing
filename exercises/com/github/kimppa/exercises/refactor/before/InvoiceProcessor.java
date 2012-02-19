@@ -1,5 +1,6 @@
 package com.github.kimppa.exercises.refactor.before;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,28 +14,11 @@ public class InvoiceProcessor {
 
 	private OrdersWebService ordersWebService;
 
-<<<<<<< HEAD
-	public Map<Integer, Invoice> createInvoicesForUsers(List<Integer> userIds) {
+	public List<Invoice> createInvoicesForUsers(List<Integer> userIds) {
 		OrderResponse response;
 		// Get data from ws
 		try {
 			response = ordersWebService.getUnbilledOrders(userIds);
-=======
-	private static final Integer USER_1 = 1;
-	private static final Integer USER_2 = 2;
-	private List<Integer> getUsers() {
-		List<Integer> users = new ArrayList<Integer>();
-		users.add(USER_1);
-		users.add(USER_2);
-		return users;
-	}
-	
-	public List<Invoice> createInvoicesForUser(int userId) {
-		OrderResponse response;
-		// Get data from ws
-		try {
-			response = ordersWebService.getUnbilledOrders(getUsers());
->>>>>>> d6f3c401b90ee7291d0cce20d68feb42974894ac
 
 			// Handle response codes
 			handleResponse(response);
@@ -52,7 +36,7 @@ public class InvoiceProcessor {
 			}
 		}
 
-		return invoices;
+		return new ArrayList<Invoice>(invoices.values());
 	}
 
 	/**

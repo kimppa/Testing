@@ -1,75 +1,76 @@
 package com.github.kimppa.exercises.refactor.after;
 
-import java.util.Collection;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.github.kimppa.exercises.refactor.Invoice;
 import com.github.kimppa.exercises.refactor.Order;
-import com.github.kimppa.exercises.refactor.OrderResponse;
-import com.github.kimppa.exercises.refactor.OrderWebServiceImpl;
-import com.github.kimppa.exercises.refactor.OrdersWebService;
 
 public class Invoicer {
-	private static final int RESPONSE_CODE_OK = 1;
-	private OrdersWebService ordersWebService = new OrderWebServiceImpl();
+	
+	private OrderFetcher orderFetcher;
+	private OrderGrouper orderGrouper;
+	private InvoiceCreator invoiceCreator;
 
-	public Collection<Invoice> createInvoicesForUsers(List<Integer> userIds) {
-		OrderResponse response;
-		// Get data from ws
-		try {
-			response = ordersWebService.getUnbilledOrders(userIds);
+	public List<Invoice> createInvoicesForUsers(List<Integer> userIds) {
+		List<Order> orders = getUnbilledOrders(userIds);
+		
+		Map<Integer, List<Order>> ordersPerUser = groupOrderByUser(orders);
+		
+		List<Invoice> invoices = invoiceOrders(ordersPerUser);
 
-			// Handle response codes
-			handleResponse(response);
-		} catch (Exception e) {
-			// an exception occurred, e.g. timeout
-			return null;
+		return invoices;
+	}
+
+	private List<Invoice> invoiceOrders(Map<Integer, List<Order>> ordersPerUser) {
+		List<Invoice> invoices = new ArrayList<Invoice>();
+		
+		for (Entry<Integer, List<Order>> ordersForUser : ordersPerUser.entrySet()) {
+			Invoice invoice = createInvoice(ordersForUser);
+			invoices.add(invoice);
 		}
 		
-		// Map between customers and their invoices
-		Map<Integer, Invoice> invoices = new HashMap<Integer, Invoice>();
-		if (response.getOrders() != null) {
-			// Loop through each order and process it
-			for (Order order : response.getOrders()) {
-				processOrder(invoices, order);
-			}
-		}
-
-		return invoices.values();
+		return invoices;
 	}
 
-	/**
-	 * Checks if we already have an invoice for the customer whose order we are
-	 * processing. If an invoice already exists, then add this order to the
-	 * existing invoice, otherwise create a new invoice.
-	 * 
-	 * @param invoices
-	 * @param order
-	 */
-	private void processOrder(Map<Integer, Invoice> invoices, Order order) {
-		Invoice invoice;
-		if(invoices.containsKey(order.getCustomerId())) {
-			invoice = invoices.get(order.getCustomerId());
-		} else {
-			invoice = new Invoice();
-			invoice.setCustomerId(order.getCustomerId());
-			invoices.put(order.getCustomerId(), invoice);
-		}
-		
-		invoice.getOrders().add(order);
-		invoice.setAmount(invoice.getAmount().add(order.getAmount()));
+	private Invoice createInvoice(Entry<Integer, List<Order>> ordersForUser) {
+		int userId = ordersForUser.getKey();
+		List<Order> orderList = ordersForUser.getValue();
+		Invoice invoice = getInvoiceCreator().createInvoiceForOrders(userId, orderList);
+		return invoice;
 	}
 
-	private void handleResponse(OrderResponse response) {
-		if (response == null) {
-			throw new RuntimeException("Response was null");
-		}
-
-		// response codes 0=error / 1=ok
-		if (response.getResponseCode() != RESPONSE_CODE_OK) {
-			throw new RuntimeException("Request failed");
-		}
+	private Map<Integer, List<Order>> groupOrderByUser(List<Order> orders) {
+		Map<Integer, List<Order>> ordersPerUser = createOrderGrouper(orders).groupByUsers();
+		return ordersPerUser;
 	}
+
+	private List<Order> getUnbilledOrders(List<Integer> userIds) {
+		List<Order> orders = getOrderFetcher().getUnbillerOrders(userIds);
+		return orders;
+	}
+
+	OrderGrouper createOrderGrouper(List<Order> orders) {
+		if (orderGrouper == null) {
+			orderGrouper = new OrderGrouper(orders);
+		}
+		return orderGrouper;
+	}
+	
+	private InvoiceCreator getInvoiceCreator() {
+		if (invoiceCreator == null) {
+			invoiceCreator = new InvoiceCreator();
+		}
+		return invoiceCreator;
+	}
+
+	private OrderFetcher getOrderFetcher() {
+		if (orderFetcher == null) {
+			orderFetcher = new OrderFetcher();
+		}
+		return orderFetcher;
+	}
+
 }

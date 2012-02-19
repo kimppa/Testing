@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrderWebServiceImpl implements OrdersWebService {
+public class OrdersWebServiceImpl implements OrdersWebService {
 	private static final int RESPONSE_OK = 1;
 
 	public OrderResponse getUnbilledOrders(List<Integer> userIds) {

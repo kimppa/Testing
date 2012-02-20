@@ -6,11 +6,11 @@ import java.util.Map;
 public class GenomeVirusMatcher {
 	
 	private Genome genome;
-	private Map<Virus, Integer> virusMatches;
+	private Map<Sequence, Integer> virusMatches;
 
 	public GenomeVirusMatcher(Genome genome) {
 		this.genome = genome;
-		virusMatches = new HashMap<Virus, Integer>();
+		virusMatches = new HashMap<Sequence, Integer>();
 	}
 	
 	public void addVirusCandidates(Virus... viruses) {
@@ -24,7 +24,7 @@ public class GenomeVirusMatcher {
 		return genome.countSequenceMatches(virus);
 	}
 	
-	public Map<Virus, Integer> getVirusMatches() {
+	public Map<Sequence, Integer> getVirusMatches() {
 		return virusMatches;
 	}
 }

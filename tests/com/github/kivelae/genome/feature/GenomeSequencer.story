@@ -31,29 +31,28 @@ Then found viruses are:
 Scenario: Calculate score for virus sequences
 
 Given I have sequences:
-| sequence  | count |
-| AAA       | 5     |
-| TTTCCC    | 4     |
-| GGGCCCAAA | 10    |
-When I run score calculation
+| sequence  | occurrences |
+| AAA       | 5           |
+| TTTCCC    | 4           |
+| GGGCCCAAA | 10          |
+When I run score calculation from context
 Then scores per viruses are:
 | virus      | score |
 | AAA        | 30    |
 | TTTCCC     | 40    |
-| GGGCCCAAA  | 280   |
-And total score is 350
+| GGGCCCAAA  | 320   |
+And total score is 390
 
 
 Scenario: Score calculation from genome
 
-Given I have genome TAAAAGCCCGTACATG
+Given I have a genome TAAAAGCCCGTACATGAAATGGCCCGTACAGCCCGTACAGCCCGTACA
 And virus sequences are:
 | sequence  |
 | AAA       |
 | ATG       |
 | CCCGGG    |
-| GTACAT    |
 | GCCCGTACA |
 When I run sequencer
 And I run score calculation
-Then total score is 111
+Then total score is 90

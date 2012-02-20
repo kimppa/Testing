@@ -1,7 +1,9 @@
 package com.github.kimppa.exercises.refactor;
 
+import java.util.List;
+
 public interface OrdersWebService {
 	
-	public OrderResponse getUnbilledOrders(int userId);
+	public OrderResponse getUnbilledOrders(List<Integer> userIds);
 
 }

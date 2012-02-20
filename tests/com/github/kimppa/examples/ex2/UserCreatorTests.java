@@ -12,6 +12,11 @@ import org.mockito.MockitoAnnotations;
 
 public class UserCreatorTests {
 
+	
+	private static final String SSN = "some ssn";
+
+	private static final String USERNAME = "username";
+
 	@Mock
 	private UserDAO userDAO;
 
@@ -33,7 +38,7 @@ public class UserCreatorTests {
 				false);
 
 		try {
-			userCreator.registerUser("username", "some ssn");
+				userCreator.registerUser(USERNAME, SSN);
 		} finally {
 			Mockito.verify(ssnValidator, Mockito.times(1)).validateSsn(
 					Mockito.anyString());
@@ -48,23 +53,23 @@ public class UserCreatorTests {
 				true);
 		Mockito.doNothing().when(userDAO).save(Mockito.any(User.class));
 
-		userCreator.registerUser("username", "some ssn");
+		userCreator.registerUser(USERNAME, SSN);
 
+		Mockito.verify(ssnValidator, Mockito.times(1)).validateSsn(SSN);
 		Mockito.verify(userDAO, Mockito.times(1)).save(Mockito.any(User.class));
 	}
 
 	@Test
 	public void registerUser_validSsn_userObjectPopulatedCorrectly() {
-		Mockito.when(ssnValidator.validateSsn(Mockito.anyString())).thenReturn(
-				true);
+		Mockito.when(ssnValidator.validateSsn(Mockito.anyString())).thenReturn(true);
 		Mockito.doNothing().when(userDAO).save(Mockito.any(User.class));
 
-		userCreator.registerUser("username", "some ssn");
+		userCreator.registerUser(USERNAME, SSN);
 
 		ArgumentCaptor<User> argument = ArgumentCaptor.forClass(User.class);
 		Mockito.verify(userDAO).save(argument.capture());
-		Assert.assertEquals("username", argument.getValue().getUsername());
-		Assert.assertEquals("some ssn", argument.getValue().getSsn());
+		Assert.assertEquals(USERNAME, argument.getValue().getUsername());
+		Assert.assertEquals(SSN, argument.getValue().getSsn());
 
 	}
 

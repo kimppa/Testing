@@ -6,8 +6,10 @@ import static junit.framework.Assert.assertTrue;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jbehave.core.annotations.BeforeScenario;
+import org.jbehave.core.annotations.Alias;
+import org.jbehave.core.annotations.Aliases;
 import org.jbehave.core.annotations.Given;
+import org.jbehave.core.annotations.Named;
 import org.jbehave.core.annotations.Then;
 import org.jbehave.core.annotations.When;
 import org.jbehave.core.model.ExamplesTable;
@@ -30,8 +32,9 @@ public class GenomeSequencerSteps {
 	
 	private static final String VIRUS_MATCH_COUNT = "virusMatchCount";
 
-	@Given("I have a genome $genomeSequence")
-	public void givenIHaveAGenome(String genomeSequence) {
+	@Given("I have a genome <genome>")
+	@Alias("I have a genome $genome")
+	public void givenIHaveAGenome(@Named("genome") String genomeSequence) {
 		Genome genome = new Genome(genomeSequence);
 		FeatureContext.add(genome);
 	}

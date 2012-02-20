@@ -1,15 +1,22 @@
 Scenario: Identify simple sequence from simple genome
 
-Given I have a genome ATCGAAAT
+Given I have a genome <genome> 
 And virus sequences are:
 | sequence |
 | AAA      |
-| AGG      |
+| GGG      |
+| CCC      |
 When I run sequencer
 Then found viruses are:
 | virus | occurrences |
 | AAA   | 1           |
-| AGG   | 0           |
+| GGG   | 0           |
+| CCC   | 2           |
+
+Examples:
+| genome        |
+| AAACCCGGTCCCT |
+| ATCGAAATCCCCG |
 
 
 Scenario: Calculate sequence occurrences

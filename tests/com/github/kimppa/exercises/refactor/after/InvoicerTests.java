@@ -32,11 +32,8 @@ public class InvoicerTests {
 	
 	@Before
 	public void setUp() {
-		invoicer = Mockito.spy(new Invoicer());
-		
+		invoicer = new Invoicer();		
 		MockitoAnnotations.initMocks(this);
-		
-		Mockito.doReturn(orderGrouper).when(invoicer).createOrderGrouper(Mockito.anyList());
 	}
 	
 	@Test

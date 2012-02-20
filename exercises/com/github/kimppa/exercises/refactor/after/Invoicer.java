@@ -17,7 +17,7 @@ public class Invoicer {
 	public List<Invoice> createInvoicesForUsers(List<Integer> userIds) {
 		List<Order> orders = getUnbilledOrders(userIds);
 		
-		Map<Integer, List<Order>> ordersPerUser = groupOrderByUser(orders);
+		Map<Integer, List<Order>> ordersPerUser = groupOrdersByUser(orders);
 		
 		List<Invoice> invoices = invoiceOrders(ordersPerUser);
 
@@ -42,7 +42,7 @@ public class Invoicer {
 		return invoice;
 	}
 
-	private Map<Integer, List<Order>> groupOrderByUser(List<Order> orders) {
+	private Map<Integer, List<Order>> groupOrdersByUser(List<Order> orders) {
 		Map<Integer, List<Order>> ordersPerUser = createOrderGrouper(orders).groupByUsers();
 		return ordersPerUser;
 	}

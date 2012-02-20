@@ -32,15 +32,19 @@ public class UserCreatorTests {
 		MockitoAnnotations.initMocks(this);
 	}
 
-	@Test
+	@Test(expected = RuntimeException.class)
 	public void registerUser_invalidSsn_userNotSave() {
 		Mockito.when(ssnValidator.validateSsn(Mockito.anyString())).thenReturn(
 				false);
 
-		userCreator.registerUser(USERNAME, SSN);
-		Mockito.verify(ssnValidator, Mockito.times(1)).validateSsn(
-				Mockito.anyString());
-		Mockito.verify(userDAO, Mockito.times(0)).save(Mockito.any(User.class));
+		try {
+				userCreator.registerUser(USERNAME, SSN);
+		} finally {
+			Mockito.verify(ssnValidator, Mockito.times(1)).validateSsn(
+					Mockito.anyString());
+			Mockito.verify(userDAO, Mockito.times(0)).save(
+					Mockito.any(User.class));
+		}
 	}
 
 	@Test
@@ -62,7 +66,6 @@ public class UserCreatorTests {
 
 		userCreator.registerUser(USERNAME, SSN);
 
-		
 		ArgumentCaptor<User> argument = ArgumentCaptor.forClass(User.class);
 		Mockito.verify(userDAO).save(argument.capture());
 		Assert.assertEquals(USERNAME, argument.getValue().getUsername());

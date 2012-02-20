@@ -8,7 +8,7 @@ public class UserCreator {
 	
 	public void registerUser(String username, String ssn) {
 		if(!ssnValidator.validateSsn(ssn)) {
-			return;
+			throw new RuntimeException("Invalid SSN");
 		}
 		
 		User user = new User();

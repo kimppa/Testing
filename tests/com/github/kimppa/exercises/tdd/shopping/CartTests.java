@@ -135,7 +135,7 @@ public class CartTests {
 	}
 	
 	@Test
-	public void getRowsTotal_calculatorIsCalled() {
+	public void getRowsTotal_void_calculatorIsCalled() {
 		Mockito.when(cartCalculator.getRowsTotal(Mockito.anyCollectionOf(CartRow.class))).thenReturn(new BigDecimal("100"));
 		BigDecimal result = cart.getRowsTotal();
 		Assert.assertEquals(0, new BigDecimal("100").compareTo(result));
@@ -143,7 +143,7 @@ public class CartTests {
 	}
 	
 	@Test
-	public void getShippingCosts_shippingCostCalculatorIsCalled() {
+	public void getShippingCosts_void_shippingCostCalculatorIsCalled() {
 		Mockito.when(cartCalculator.getRowsTotal(Mockito.anyCollectionOf(CartRow.class))).thenReturn(new BigDecimal("100"));
 		Mockito.when(shippingCostCalculator.getShippingCosts(Mockito.any(BigDecimal.class))).thenReturn(new BigDecimal("20"));
 		BigDecimal result = cart.getShippingCosts();
